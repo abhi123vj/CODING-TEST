@@ -3,6 +3,6 @@
 
 <p align="center">
 
-  <img src="https://github.com/abhi123vj/traders_journal/blob/main/assets/cover.jpg" alt="Sofia Cover" />
+  <img src="https://github.com/abhi123vj/CODING-TEST/blob/main/instagramclone.jpg" alt="Sofia Cover" />
 
 </p>
