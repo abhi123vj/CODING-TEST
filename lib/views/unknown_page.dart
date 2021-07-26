@@ -6,7 +6,7 @@ class UnknownPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Center(child: Text("Unknosn")),
+      child: Center(child: Text("Unknown")),
     );
   }
 }
