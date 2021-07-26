@@ -43,7 +43,7 @@ class NewsCntroller extends GetxController {
         
        
         Text(
-          "No Posts to Display \nTry again later",
+          "Nothing to display\nYou are Up to minute",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: "Zenloop",

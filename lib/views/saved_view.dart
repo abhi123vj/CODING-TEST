@@ -18,7 +18,6 @@ class SavedViews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // child: Center(        child:  bookMarkController.displayImage != null ? Image.file(bookMarkController.displayImage) : Container()),
 
       appBar: AppBar(
         elevation: 0,
@@ -111,6 +110,7 @@ class SavedViews extends StatelessWidget {
                                 },
                                 child: SvgPicture.asset(
                                    feedController.bookmrkfill,
+                                   color: likecolor,
                                   height: _iconHeight,
                                 ),
                               ),
