@@ -16,6 +16,8 @@ class Comments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+            feedController.display(context);
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -92,7 +94,31 @@ class Comments extends StatelessWidget {
                   child: Consumer<InstaProvider>(builder: (context, model, _) {
                     return FutureBuilder(
                         future: model.fetchCmnts(),
-                        builder: (context, snapshot) => ListView.builder(
+                        builder: (context, snapshot) => snapshot.connectionState !=
+                      ConnectionState.done
+                  ? Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.topCenter,
+                      child: LinearProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Vx.cyan100),
+                      ),
+                    )
+                  : model.feeds.length == 0
+                      ? Container(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Container(
+                                  margin: EdgeInsets.only(
+                                      bottom:
+                                          MediaQuery.of(context).size.height *
+                                              .1),
+                                  child: feedController.displyimag),
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
                             itemCount:
                                 feedController.listViewDataCmnts.length <= 30
                                     ? feedController.listViewDataCmnts.length
