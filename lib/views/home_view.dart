@@ -41,21 +41,23 @@ class HomeView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10),
             child: GestureDetector(
-              onTap: () => Get.toNamed("/saved"),
-              child: Obx(()=>SvgPicture.asset(
-                bookMarkController.feedlist.length < 1
-                    ? feedController.bookmrk
-                    : feedController.bookmrkfill,
-                height: _iconHeight,
-                color: likecolor,
-              ),)
-            ),
+                onTap: () => Get.toNamed("/saved"),
+                child: Obx(
+                  () => SvgPicture.asset(
+                    bookMarkController.feedlist.length < 1
+                        ? feedController.bookmrk
+                        : feedController.bookmrkfill,
+                    height: _iconHeight,
+                    color: likecolor,
+                  ),
+                )),
           ),
         ],
       ),
       body: Container(
+        color: bgColor,
         child: Consumer<InstaProvider>(builder: (context, model, _) {
-        feedController.display(context);
+          feedController.display(context);
           return FutureBuilder(
               future: model.fetchData(),
               builder: (context, snapshot) => snapshot.connectionState !=
@@ -88,199 +90,173 @@ class HomeView extends StatelessWidget {
                               ? feedController.listViewData.length
                               : 30,
                           itemBuilder: (context, int index) {
-                            var active = 'lib/assets/images/like.svg'.obs;
-                            var bookActive =
-                                'lib/assets/images/bookmark.svg'.obs;
-                            var actualIndex = -1;
-                            for (var i = 0;
-                                i < bookMarkController.feedlist.length;
-                                i++) {
-                              if (bookMarkController.feedlist[i].id ==
-                                  feedController.listViewData[index]['id']) {
-                                bookActive =
-                                    'lib/assets/images/bookmarkfill.svg'.obs;
-                                actualIndex = i;
-                              }
-                            }
-                            return Container(
-                              color: bgColor,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: CircleAvatar(
-                                            backgroundColor: Vx.randomColor,
-                                            foregroundColor: Vx.pink100,
-                                            child: Icon(EvaIcons.people),
-                                          ),
-                                        ),
-                                        Text(feedController.listViewData[index]
-                                            ['channelname']),
-                                      ],
-                                    ),
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 5, left: 10, right: 10, top: 5),
+                              child: Material(
+                                color: bgColor,
+                                borderRadius: BorderRadius.circular(20),
+                                elevation: 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: bgColor,
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  Divider(
-                                    height: .05,
-                                  ),
-                                  Container(
-                                    child: ProgressiveImage(
-                                      placeholder: NetworkImage(
-                                          feedController.listViewData[index]
-                                              ['low thumbnail']),
-                                      // size: 1.87KB
-                                      thumbnail: NetworkImage(
-                                          feedController.listViewData[index]
-                                              ['medium thumbnail']),
-                                      // size: 1.29MB
-                                      image: NetworkImage(
-                                          feedController.listViewData[index]
-                                              ['high thumbnail']),
-                                      height: 300,
-                                      width: 500,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Row(
-                                      children: [
-                                        Obx(() {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              if (active.value ==
-                                                  feedController.like)
-                                                active.value =
-                                                    feedController.likefill;
-                                              else
-                                                active.value =
-                                                    feedController.like;
-                                            },
-                                            child: SvgPicture.asset(
-                                              active.value,
-                                              height: _iconHeight,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: CircleAvatar(
+                                                backgroundColor:  feedController
+                                                              .listViewData[
+                                                          index]['fee_type']=="Free"?Vx.green400:Vx.red400,
+                                                foregroundColor: Vx.gray600,
+                                                child: feedController
+                                                              .listViewData[
+                                                          index]['fee_type']=="Free"? Icon(
+                                                    FontAwesomeIcons.hospital): Text( feedController
+                                                              .listViewData[
+                                                          index]['fee']),
+                                              ),
                                             ),
-                                          );
-                                        }),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () => Get.toNamed("/cmnts",
-                                              parameters: {
-                                                "username": feedController
-                                                        .listViewData[index]
-                                                    ['channelname'],
-                                                "title": feedController
-                                                        .listViewData[index]
-                                                    ['title'],
-                                              }),
-                                          child: SvgPicture.asset(
-                                            feedController.cmnt,
-                                            height: _iconHeight,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        SvgPicture.asset(
-                                          feedController.share,
-                                          height: _iconHeight,
-                                        ),
-                                        Expanded(
-                                          child: Container(),
-                                        ),
-                                        GestureDetector(
-                                            onTap: () {
-                                              if (bookActive.value ==
-                                                  feedController.bookmrk) {
-                                                bookActive.value =
-                                                    feedController.bookmrkfill;
-                                                bookMarkController.save(
-                                                    feedController
-                                                        .listViewData[index]);
-                                              } else if (actualIndex != -1) {
-                                                bookActive.value =
-                                                    feedController.bookmrk;
-                                                bookMarkController
-                                                    .rembook(actualIndex);
-                                              } else {
-                                                bookActive.value =
-                                                    feedController.bookmrk;
-                                                for (var i = 0;
-                                                    i <
-                                                        bookMarkController
-                                                            .feedlist.length;
-                                                    i++) {
-                                                  if (bookMarkController
-                                                          .feedlist[i].id ==
+                                            Expanded(
+                                              child: Container(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
                                                       feedController
                                                               .listViewData[
-                                                          index]['id']) 
-                                                bookMarkController
-                                                    .rembook(i);
-                                                }
-                                              }
-                                              print(
-                                                  "passing ${feedController.listViewData[index]['channelname']}");
-                                            },
-                                            child: Obx(
-                                              () => SvgPicture.asset(
-                                                bookActive.value,
-                                                height: _iconHeight,
+                                                          index]['name'],
+                                                      style: GoogleFonts
+                                                          .robotoMono(
+                                                        textStyle:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .headline6,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: textColor,
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      feedController
+                                                              .listViewData[
+                                                          index]['address']+", "+feedController
+                                                              .listViewData[
+                                                          index]['block_name']+", "+feedController
+                                                              .listViewData[
+                                                          index]['district_name']+", "+feedController
+                                                              .listViewData[
+                                                          index]['state_name']+", PIN:"+feedController
+                                                              .listViewData[
+                                                          index]['pincode'].toString(),
+                                                      style: GoogleFonts
+                                                          .robotoMono(
+                                                        textStyle:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .bodyText2,
+                                                        color: textColor,
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: ReadMoreText(
-                                      feedController.listViewData[index]
-                                          ['title'],
-                                      style: GoogleFonts.robotoMono(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                        fontSize: 16,
-                                        color: textColor,
-                                        fontWeight: FontWeight.w300,
-                                        fontStyle: FontStyle.normal,
-                                      ),
-                                      trimLength: 50,
-                                      colorClickableText: Colors.pink,
-                                      trimMode: TrimMode.Length,
-                                      trimCollapsedText: 'Show more',
-                                      trimExpandedText: 'Show less',
-                                      moreStyle: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                      onTap: () =>
-                                          Get.toNamed("/cmnts", parameters: {
-                                            "username": feedController
-                                                    .listViewData[index]
-                                                ['channelname'],
-                                            "title": feedController
-                                                .listViewData[index]['title'],
-                                          }),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          "view comments",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Vx.gray500),
+                                            ),
+                                          ],
                                         ),
-                                      ))
-                                ],
+                                      ),
+                                      Divider(
+                                        height: .05,
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                              Container(
+                                                alignment: Alignment.center,
+                                                child: Text("Capacity "+
+                                                        feedController
+                                                                .listViewData[
+                                                            index]['available_capacity'].toString()+" | First "+
+                                                        feedController
+                                                                .listViewData[
+                                                            index]['available_capacity_dose1'].toString()+" | Second "+
+                                                        feedController
+                                                                .listViewData[
+                                                            index]['available_capacity_dose2'].toString(),
+                                                        style: GoogleFonts
+                                                            .robotoMono(
+                                                          textStyle:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText2,
+                                                          color: textColor,
+                                                          
+                                                          fontStyle:
+                                                              FontStyle.normal,
+                                                        ),
+                                                        textAlign: TextAlign.justify,
+                                                      ),
+                                              ),
+                                            SizedBox(
+                                        height: .05,
+                                      ),
+                                                 Text(
+                                                      feedController
+                                                              .listViewData[
+                                                          index]['vaccine'],
+                                                      style: GoogleFonts
+                                                          .robotoMono(
+                                                        textStyle:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .headline6,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: textColor,
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: .5,
+                                                    )
+                                                    ,
+                                                       Text(
+                                                      feedController
+                                                              .listViewData[
+                                                          index]['date'],
+                                                      style: GoogleFonts
+                                                          .robotoMono(
+                                                        textStyle:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .headline6,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: textColor,
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                      ),
+                                                    ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                             );
                           }));
